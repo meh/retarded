@@ -33,7 +33,7 @@ class Retarded
   end
   
   def __get_retarded__
-    return @result if @result
+    return @result if instance_variable_defined? :@result
 
     @result    = @block.call(*@arguments)
     @block     = nil
