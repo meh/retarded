@@ -33,7 +33,11 @@ class Retarded
   end
   
   def __get_retarded__
-    @result ||= @block.call(*@arguments)
+    return @result if @result
+
+    @result    = @block.call(*@arguments)
+    @block     = nil
+    @arguments = nil
   end; alias ~ __get_retarded__
 
   def ___is_retarded___; true; end
