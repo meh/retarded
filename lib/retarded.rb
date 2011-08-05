@@ -30,14 +30,23 @@ class Retarded
   def initialize (*arguments, &block)
     @arguments = arguments
     @block     = block
+
+    @mutex = defined?(Mutex) ? Mutex.new : Class.new {
+      def synchronize (&block)
+        block.call
+      end
+    }
   end
   
   def __get_retarded__
-    return @result if instance_variable_defined? :@result
+    @mutex.synchronize {
+      return @result if @executed
 
-    @result    = @block.call(*@arguments)
-    @block     = nil
-    @arguments = nil
+      @result    = @block.call(*@arguments)
+      @executed  = true
+      @block     = nil
+      @arguments = nil
+    }
   end; alias ~ __get_retarded__
 
   def ___is_retarded___; true; end
