@@ -35,7 +35,7 @@ class Retarded
       def synchronize (&block)
         block.call
       end
-    }
+    }.new
   end
   
   def __get_retarded__
