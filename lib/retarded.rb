@@ -42,10 +42,11 @@ class Retarded
     @mutex.synchronize {
       return @result if @executed
 
-      @result    = @block.call(*@arguments)
-      @executed  = true
-      @block     = nil
-      @arguments = nil
+      @result = @block.call(*@arguments).tap {
+        @executed  = true
+        @block     = nil
+        @arguments = nil
+      }
     }
   end; alias ~ __get_retarded__
 
