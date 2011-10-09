@@ -11,48 +11,48 @@
 #++
 
 class Retarded
-  class << self
-    def normalize (value)
-      if (value.___is_retarded___ rescue false)
-        ~value
-      else
-        value
-      end
-    end; alias - normalize
-  end
+	class << self
+		def normalize (value)
+			if (value.___is_retarded___ rescue false)
+				~value
+			else
+				value
+			end
+		end; alias - normalize
+	end
 
-  tmp, $VERBOSE = $VERBOSE, nil
-  Object.instance_methods.each {|meth|
-    undef_method meth
-  }
-  $VERBOSE = tmp
+	tmp, $VERBOSE = $VERBOSE, nil
+	Object.instance_methods.each {|meth|
+		undef_method meth
+	}
+	$VERBOSE = tmp
 
-  def initialize (*arguments, &block)
-    @arguments = arguments
-    @block     = block
+	def initialize (*arguments, &block)
+		@arguments = arguments
+		@block     = block
 
-    @mutex = defined?(Mutex) ? Mutex.new : Class.new {
-      def synchronize (&block)
-        block.call
-      end
-    }.new
-  end
-  
-  def __get_retarded__
-    @mutex.synchronize {
-      return @result if @executed
+		@mutex = defined?(Mutex) ? Mutex.new : Class.new {
+			def synchronize (&block)
+				block.call
+			end
+		}.new
+	end
+	
+	def __get_retarded__
+		@mutex.synchronize {
+			return @result if @executed
 
-      @result = @block.call(*@arguments).tap {
-        @executed  = true
-        @block     = nil
-        @arguments = nil
-      }
-    }
-  end; alias ~ __get_retarded__
+			@result = @block.call(*@arguments).tap {
+				@executed  = true
+				@block     = nil
+				@arguments = nil
+			}
+		}
+	end; alias ~ __get_retarded__
 
-  def ___is_retarded___; true; end
-  
-  def method_missing (id, *args, &block)
-    __get_retarded__.__send__(id, *args, &block)
-  end
+	def ___is_retarded___; true; end
+	
+	def method_missing (id, *args, &block)
+		__get_retarded__.__send__(id, *args, &block)
+	end
 end
