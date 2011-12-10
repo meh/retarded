@@ -33,7 +33,7 @@ class Retarded < BlankSlate
 		@arguments = arguments
 		@block     = block
 
-		@mutex = defined?(::Mutex) ? ::Mutex.new : ::Retarded::Mutex.new
+		@mutex = defined?(::Mutex) ? ::Mutex.new : Mutex.new
 	end
 	
 	def ___get_retarded___
