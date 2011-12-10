@@ -12,5 +12,5 @@ Retarded 10 do |many|
 end
 ```
 
-The first time a method is be called on the object it will execute the block and
+The first time a method is called on the object it will execute the block and
 will be a transparent proxy (Reference like) for the resulting value.
