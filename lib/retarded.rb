@@ -10,7 +10,15 @@
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 #++
 
-class Retarded
+require 'blankslate'
+
+class Retarded < BlankSlate
+	class Mutex
+		def synchronize (&block)
+			block.call
+		end
+	end
+
 	class << self
 		def normalize (value)
 			if (value.___is_retarded___ rescue false)
@@ -21,24 +29,14 @@ class Retarded
 		end; alias - normalize
 	end
 
-	tmp, $VERBOSE = $VERBOSE, nil
-	Object.instance_methods.each {|meth|
-		undef_method meth
-	}
-	$VERBOSE = tmp
-
 	def initialize (*arguments, &block)
 		@arguments = arguments
 		@block     = block
 
-		@mutex = defined?(Mutex) ? Mutex.new : Class.new {
-			def synchronize (&block)
-				block.call
-			end
-		}.new
+		@mutex = defined?(::Mutex) ? ::Mutex.new : ::Retarded::Mutex.new
 	end
 	
-	def __get_retarded__
+	def ___get_retarded___
 		@mutex.synchronize {
 			return @result if @executed
 
@@ -48,11 +46,17 @@ class Retarded
 				@arguments = nil
 			}
 		}
-	end; alias ~ __get_retarded__
+	end; alias ~ ___get_retarded___
 
 	def ___is_retarded___; true; end
 	
 	def method_missing (id, *args, &block)
-		__get_retarded__.__send__(id, *args, &block)
+		___get_retarded___.__send__(id, *args, &block)
+	end
+end
+
+module Kernel
+	def Retarded (*args, &block)
+		Retarded.new(*args, &block)
 	end
 end

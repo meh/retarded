@@ -4,7 +4,13 @@ Simple Ruby lazy object
 It has the same limitations of [https://github.com/meh/refr](refr).
 
 ```ruby
-Retarded.new 10 do |many| File.read('/dev/urandom', many) end
+Retarded { File.read('/dev/urandom', 10) }
+
+Retarded 10 do |many|
+  # `many` will be 10
+  File.read('/dev/urandom', many)
+end
 ```
 
-The first time a method will be called on the object it will execute the block.
+The first time a method is be called on the object it will execute the block and
+will be a transparent proxy (Reference like) for the resulting value.

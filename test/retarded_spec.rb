@@ -9,7 +9,7 @@ describe Retarded do
       @called  += 1
     end
 
-    r = Retarded.new {
+    r = Retarded {
       sinep
 
       23
